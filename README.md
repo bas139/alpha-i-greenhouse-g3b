@@ -11,7 +11,7 @@
 * **Project Files:**
   * `case_config.py` — Shared case configuration (do not modify)
   * `subscriber.ipynb` — MQTT data collector to CSV
-  * `train_model.ipynb` — Train (`data/train.csv`) and evaluate (`data/test.csv`) `DecisionTreeClassifier` (`criterion="entropy"`, `max_depth=8`, `min_samples_split=18`, `min_samples_leaf=2`, `random_state=42`) → `model.joblib`
+  * `train_model.ipynb` — Train (`data/train.csv`) and evaluate (`data/test.csv`) `DecisionTreeClassifier` (`criterion="entropy"`, `max_depth=8`, `min_samples_split=18`, `min_samples_leaf=2`, `ccp_alpha=0.006`, `random_state=42`) → `model.joblib`
   * `rt_prediction.py` — Real-time MQTT inference + CSV logger + Node-RED forwarder
   * `GreenHouse_flow.json` / `IDT-GREENHOUSE-FLOW.json` — Node-RED Dashboard flow (LEDs, 4 gauges, 3 charts using `p.timestamp`, Predicted state, Reset button)
   * `p2_prediction.csv` — Phase 2 real-time prediction output (delete or start fresh with `START_NEW_CSV = True` before the official round)
