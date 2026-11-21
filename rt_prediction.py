@@ -30,7 +30,7 @@ OUTPUT_CSV = os.path.join(HERE, "p2_prediction.csv")
 
 #NOTE: True = Delete the existing p2_prediction.csv and start over (used during practice)
 #NOTE: False = Continue from the previous file, skipping previously predicted rows (used during the actual competition)
-START_NEW_CSV = True
+START_NEW_CSV = False
 
 # ============================================================
 # UTILITY

@@ -14,6 +14,7 @@ Thumbs.db
 desktop.ini
 *.tmp
 *.bak
+*.zip
 
 # Local secrets (if ever added)
 .env
