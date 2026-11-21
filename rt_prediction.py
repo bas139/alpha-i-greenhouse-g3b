@@ -155,7 +155,7 @@ def get_feature_values(data):
 def parse_row(payload):
     try:
         data = json.loads(payload.decode("utf-8"))
-        if not isinstance(data, dict):
+        if not isinstance(data, dict) or data.get("timestamp") is None:
             return None
         timestamp = str(data["timestamp"]).strip()
         features = get_feature_values(data)
@@ -323,6 +323,19 @@ def main():
     check_settings()
     model = load_model()
     prepare_output_csv()
+
+    print("=" * 60)
+    print(f"Broker        : {MQTT_CONFIG['BROKER_HOST']}:{MQTT_CONFIG['BROKER_PORT']}")
+    print(f"Topics        : {MQTT_CONFIG['TOPIC_IN']} -> {MQTT_CONFIG['TOPIC_OUT']}")
+    print(f"START_NEW_CSV : {START_NEW_CSV} | Output: {OUTPUT_CSV}")
+    if hasattr(model, "get_params"):
+        mp = model.get_params()
+        print(
+            f"Model Params  : criterion={mp.get('criterion')}, max_depth={mp.get('max_depth')}, "
+            f"min_samples_split={mp.get('min_samples_split')}, min_samples_leaf={mp.get('min_samples_leaf')}, "
+            f"ccp_alpha={mp.get('ccp_alpha')}"
+        )
+    print("=" * 60)
 
     client = mqtt.Client(
         mqtt.CallbackAPIVersion.VERSION2,

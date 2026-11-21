@@ -16,6 +16,14 @@
   * `GreenHouse_flow.json` / `IDT-GREENHOUSE-FLOW.json` — Node-RED Dashboard flow (LEDs, 4 gauges, 3 charts using `p.timestamp`, Predicted state, Reset button)
   * `p2_prediction.csv` — Phase 2 real-time prediction output (delete or start fresh with `START_NEW_CSV = True` before the official round)
 
+## Competition-Day Runbook (ขั้นตอนวันแข่งจริง — ข้อมูลชุดใหม่)
+1. **เก็บข้อมูลชุดใหม่:** อัปเดต `BROKER` / `TOPIC` / `CSV_FILENAME` ใน `subscriber.ipynb` (ตั้ง `OVERWRITE_EXISTING = True` เพื่อลบไฟล์เก่าอัตโนมัติ) แล้วรันเก็บ `data/train.csv` และ `data/test.csv` ชุดใหม่
+2. **เทรน & ตรวจสอบโมเดล:** รัน `train_model.ipynb` (Cell 1 + Cell 2) — ค่า default (`entropy`, `max_depth=8`, `min_samples_split=18`, `min_samples_leaf=2`, `ccp_alpha=0.006`) ออกแบบให้ปรับตัวได้หลายขนาดข้อมูลและหลายรูปแบบเกณฑ์; หากต้องการให้ค้นหาพารามิเตอร์อัตโนมัติบนข้อมูลชุดใหม่ ปรับ `AUTO_TUNE = True` แล้วรันเทียบผล Unseen Test บน `data/test.csv`
+3. **เช็กการเชื่อมต่อ MQTT:** ตรวจสอบ `BROKER_HOST`, `TOPIC_IN`, `TOPIC_OUT` ใน `rt_prediction.py` (และโหนด `mqtt in` ใน Node-RED หากเปลี่ยน broker/topic)
+4. **ล้างผลซ้อมเก่า:** ลบ `p2_prediction.csv` เดิมก่อนเริ่มแข่งจริง (ใช้ `START_NEW_CSV = True` ตอนเริ่มรอบ และสลับเป็น `False` หากต้องรีสตาร์ทสคริปต์กลางรอบ)
+5. **รีเซ็ตหน้าจอ Dashboard:** กดปุ่ม **↻ RESET DASHBOARD** บน Node-RED (`http://localhost:1880/ui`) ก่อนปล่อยข้อมูลจริง
+6. **รันทำนาย Real-time:** รัน `rt_prediction.py` ควบคู่กับ Node-RED Dashboard จนจบสมบูรณ์
+
 ## Prerequisites
 ### Main Program
 * Visual Studio Code
