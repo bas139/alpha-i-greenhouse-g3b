@@ -1,0 +1,726 @@
+[
+    {
+        "id": "57b3492b059d8ed0",
+        "type": "tab",
+        "label": "🏆 IDT'GREEN-HOUSE AI DASHBOARD",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "dcbc3657a30ccb74",
+        "type": "mqtt in",
+        "z": "57b3492b059d8ed0",
+        "name": "Subscribe G3B",
+        "topic": "idt/cd-alp/G3B",
+        "qos": "1",
+        "datatype": "auto",
+        "broker": "7b749cbd3b1d96e1",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 130,
+        "y": 160,
+        "wires": [
+            [
+                "72a6049ed776e56b"
+            ]
+        ]
+    },
+    {
+        "id": "72a6049ed776e56b",
+        "type": "json",
+        "z": "57b3492b059d8ed0",
+        "name": "Parse JSON",
+        "property": "payload",
+        "action": "obj",
+        "pretty": false,
+        "x": 330,
+        "y": 160,
+        "wires": [
+            [
+                "6b676a64ac564ca3",
+                "0e49455abc61d201",
+                "f1a2b3c4d5e67890",
+                "bce1811510ae9cf9",
+                "929910ec68addeb3",
+                "b16bbb8dc931b49b"
+            ]
+        ]
+    },
+    {
+        "id": "b16bbb8dc931b49b",
+        "type": "debug",
+        "z": "57b3492b059d8ed0",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 560,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "6b676a64ac564ca3",
+        "type": "function",
+        "z": "57b3492b059d8ed0",
+        "name": "Route LEDs by label",
+        "func": "let p = msg.payload || {};\nlet label = String(p.y_label_pred || p.y_label || \"unknown\").toLowerCase();\n\nlet isNormal = label.includes(\"normal\") || (label === \"unknown\" && p.y_pred === 0);\nlet isAlert  = label.includes(\"alert\")  || (label === \"unknown\" && p.y_pred === 1);\nlet isAlarm  = label.includes(\"alarm\")  || (label === \"unknown\" && p.y_pred === 2);\n\nlet normalMsg = { payload: isNormal };\nlet alertMsg  = { payload: isAlert };\nlet alarmMsg  = { payload: isAlarm };\n\nreturn [normalMsg, alertMsg, alarmMsg];",
+        "outputs": 3,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 590,
+        "y": 100,
+        "wires": [
+            [
+                "ddabb2845b1b0b80"
+            ],
+            [
+                "13c0615d3f04bd62"
+            ],
+            [
+                "a7c4e91f8b2d5031"
+            ]
+        ]
+    },
+    {
+        "id": "ddabb2845b1b0b80",
+        "type": "ui_led",
+        "z": "57b3492b059d8ed0",
+        "order": 3,
+        "group": "9c41a2b0e5d73812",
+        "width": 4,
+        "height": 1,
+        "label": "Normal",
+        "labelPlacement": "left",
+        "labelAlignment": "left",
+        "colorForValue": [
+            {
+                "color": "#10b981",
+                "value": "true",
+                "valueType": "bool"
+            },
+            {
+                "color": "#cbd5e1",
+                "value": "false",
+                "valueType": "bool"
+            }
+        ],
+        "allowColorForValueInMessage": false,
+        "shape": "dot",
+        "showGlow": true,
+        "name": "led_nor",
+        "x": 880,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "13c0615d3f04bd62",
+        "type": "ui_led",
+        "z": "57b3492b059d8ed0",
+        "order": 4,
+        "group": "9c41a2b0e5d73812",
+        "width": 4,
+        "height": 1,
+        "label": "Alert",
+        "labelPlacement": "left",
+        "labelAlignment": "left",
+        "colorForValue": [
+            {
+                "color": "#f59e0b",
+                "value": "true",
+                "valueType": "bool"
+            },
+            {
+                "color": "#cbd5e1",
+                "value": "false",
+                "valueType": "bool"
+            }
+        ],
+        "allowColorForValueInMessage": false,
+        "shape": "dot",
+        "showGlow": true,
+        "name": "led_alert",
+        "x": 880,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "a7c4e91f8b2d5031",
+        "type": "ui_led",
+        "z": "57b3492b059d8ed0",
+        "order": 5,
+        "group": "9c41a2b0e5d73812",
+        "width": 4,
+        "height": 1,
+        "label": "Alarm",
+        "labelPlacement": "left",
+        "labelAlignment": "left",
+        "colorForValue": [
+            {
+                "color": "#ef4444",
+                "value": "true",
+                "valueType": "bool"
+            },
+            {
+                "color": "#cbd5e1",
+                "value": "false",
+                "valueType": "bool"
+            }
+        ],
+        "allowColorForValueInMessage": false,
+        "shape": "dot",
+        "showGlow": true,
+        "name": "led_alarm",
+        "x": 880,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "0e49455abc61d201",
+        "type": "ui_text",
+        "z": "57b3492b059d8ed0",
+        "group": "9c41a2b0e5d73812",
+        "order": 1,
+        "width": 12,
+        "height": 2,
+        "name": "Predicted state",
+        "label": "AI Prediction",
+        "format": "<span class=\"gh-state-pill gh-state-{{(msg.payload.y_label_pred || msg.payload.y_label || 'idle').toLowerCase().replace('_state','')}}\">{{(msg.payload.y_label_pred || msg.payload.y_label || 'WAITING').toUpperCase()}}</span>",
+        "layout": "row-spread",
+        "className": "gh-predicted-card",
+        "style": false,
+        "font": "",
+        "fontSize": "",
+        "color": "#0f172a",
+        "x": 890,
+        "y": 185,
+        "wires": []
+    },
+    {
+        "id": "f1a2b3c4d5e67890",
+        "type": "ui_template",
+        "z": "57b3492b059d8ed0",
+        "group": "9c41a2b0e5d73812",
+        "name": "AI Confidence & Timestamp",
+        "order": 2,
+        "width": 12,
+        "height": 2,
+        "format": "<div class=\"gh-conf-wrap\">\n    <div class=\"gh-conf-head\">\n        <span class=\"gh-conf-title\">MODEL CONFIDENCE</span>\n        <span class=\"gh-ts-badge\">{{(msg && msg.payload && msg.payload.timestamp) ? msg.payload.timestamp : 'Waiting for data...'}}</span>\n    </div>\n    <div class=\"gh-bars\">\n        <div class=\"gh-bar-row\">\n            <span class=\"gh-bar-lbl\">Normal</span>\n            <div class=\"gh-bar-track\"><div class=\"gh-bar-fill gh-fill-normal\" ng-style=\"{'width': ((msg && msg.payload && msg.payload.y_pred_prob_Normal_state != null) ? (msg.payload.y_pred_prob_Normal_state * 100).toFixed(1) : ((msg && msg.payload && msg.payload.y_pred_prob_normal != null) ? (msg.payload.y_pred_prob_normal * 100).toFixed(1) : 0)) + '%'}\"></div></div>\n            <span class=\"gh-bar-pct\">{{(msg && msg.payload && msg.payload.y_pred_prob_Normal_state != null) ? (msg.payload.y_pred_prob_Normal_state * 100).toFixed(1) : ((msg && msg.payload && msg.payload.y_pred_prob_normal != null) ? (msg.payload.y_pred_prob_normal * 100).toFixed(1) : '0.0')}}%</span>\n        </div>\n        <div class=\"gh-bar-row\">\n            <span class=\"gh-bar-lbl\">Alert</span>\n            <div class=\"gh-bar-track\"><div class=\"gh-bar-fill gh-fill-alert\" ng-style=\"{'width': ((msg && msg.payload && msg.payload.y_pred_prob_Alert_state != null) ? (msg.payload.y_pred_prob_Alert_state * 100).toFixed(1) : ((msg && msg.payload && msg.payload.y_pred_prob_alert != null) ? (msg.payload.y_pred_prob_alert * 100).toFixed(1) : 0)) + '%'}\"></div></div>\n            <span class=\"gh-bar-pct\">{{(msg && msg.payload && msg.payload.y_pred_prob_Alert_state != null) ? (msg.payload.y_pred_prob_Alert_state * 100).toFixed(1) : ((msg && msg.payload && msg.payload.y_pred_prob_alert != null) ? (msg.payload.y_pred_prob_alert * 100).toFixed(1) : '0.0')}}%</span>\n        </div>\n        <div class=\"gh-bar-row\">\n            <span class=\"gh-bar-lbl\">Alarm</span>\n            <div class=\"gh-bar-track\"><div class=\"gh-bar-fill gh-fill-alarm\" ng-style=\"{'width': ((msg && msg.payload && msg.payload.y_pred_prob_Alarm_state != null) ? (msg.payload.y_pred_prob_Alarm_state * 100).toFixed(1) : ((msg && msg.payload && msg.payload.y_pred_prob_alarm != null) ? (msg.payload.y_pred_prob_alarm * 100).toFixed(1) : 0)) + '%'}\"></div></div>\n            <span class=\"gh-bar-pct\">{{(msg && msg.payload && msg.payload.y_pred_prob_Alarm_state != null) ? (msg.payload.y_pred_prob_Alarm_state * 100).toFixed(1) : ((msg && msg.payload && msg.payload.y_pred_prob_alarm != null) ? (msg.payload.y_pred_prob_alarm * 100).toFixed(1) : '0.0')}}%</span>\n        </div>\n    </div>\n</div>",
+        "storeOutMessages": false,
+        "fwdInMessages": false,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "gh-confidence-card",
+        "x": 920,
+        "y": 225,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "bce1811510ae9cf9",
+        "type": "function",
+        "z": "57b3492b059d8ed0",
+        "name": "To chart series",
+        "func": "let p = msg.payload || {};\n\nlet ts = Date.now();\nif (p.timestamp !== undefined && p.timestamp !== null && p.timestamp !== \"\") {\n    if (typeof p.timestamp === \"number\" && Number.isFinite(p.timestamp)) {\n        ts = (p.timestamp < 1e12) ? p.timestamp * 1000 : p.timestamp;\n    } else {\n        let s = String(p.timestamp).trim();\n        if (/^\\d+(\\.\\d+)?$/.test(s)) {\n            let num = Number(s);\n            if (Number.isFinite(num)) {\n                ts = (num < 1e12) ? num * 1000 : num;\n            }\n        } else {\n            let parsed = Date.parse(s.replace(\" \", \"T\"));\n            if (isNaN(parsed)) {\n                parsed = Date.parse(s);\n            }\n            if (!isNaN(parsed)) {\n                ts = parsed;\n            }\n        }\n    }\n}\n\nfunction readNum(obj, primary, fallback) {\n    let raw = (obj[primary] !== undefined && obj[primary] !== null && obj[primary] !== \"\")\n        ? obj[primary]\n        : obj[fallback];\n    if (raw === undefined || raw === null || raw === \"\") {\n        return null;\n    }\n    let val = Number(raw);\n    return Number.isFinite(val) ? val : null;\n}\n\nlet tempVal = readNum(p, \"temperature_celsius\", \"temp_c\");\nlet humVal  = readNum(p, \"humidity_percentage\", \"humidity_pct\");\nlet luxVal  = readNum(p, \"lux_lumen\", \"lux_lm\");\nlet co2Val  = readNum(p, \"CO2_ppm\", \"co2_ppm\");\n\nlet thMsgs = [];\nif (tempVal !== null) {\n    thMsgs.push({ topic: \"temperature\", payload: tempVal, timestamp: ts });\n}\nif (humVal !== null) {\n    thMsgs.push({ topic: \"humidity\", payload: humVal, timestamp: ts });\n}\n\nlet luxMsg = (luxVal !== null) ? { topic: \"lux\", payload: luxVal, timestamp: ts } : null;\nlet co2Msg = (co2Val !== null) ? { topic: \"co2\", payload: co2Val, timestamp: ts } : null;\n\nreturn [thMsgs.length ? thMsgs : null, luxMsg, co2Msg];",
+        "outputs": 3,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 280,
+        "wires": [
+            [
+                "a216e405fdf48f08"
+            ],
+            [
+                "c29c7c568bac1dce"
+            ],
+            [
+                "d9a423e5ca136b94"
+            ]
+        ]
+    },
+    {
+        "id": "a216e405fdf48f08",
+        "type": "ui_chart",
+        "z": "57b3492b059d8ed0",
+        "name": "th values",
+        "group": "8b30f1a9d4c62701",
+        "order": 1,
+        "width": 8,
+        "height": 6,
+        "label": "TEMP_HUMID MONITOR",
+        "chartType": "line",
+        "legend": "true",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "No data",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": "1",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "86400",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#ef4444",
+            "#0284c7",
+            "#10b981",
+            "#f59e0b",
+            "#7c3aed",
+            "#8c564b",
+            "#000000",
+            "#000000",
+            "#000000"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 880,
+        "y": 270,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c29c7c568bac1dce",
+        "type": "ui_chart",
+        "z": "57b3492b059d8ed0",
+        "name": "lux values",
+        "group": "5e21c0d8f3a71492",
+        "order": 1,
+        "width": 8,
+        "height": 6,
+        "label": "LUX MONITOR",
+        "chartType": "line",
+        "legend": "true",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "No data",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": "1",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "86400",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#d97706",
+            "#0284c7",
+            "#10b981",
+            "#ef4444",
+            "#7c3aed",
+            "#8c564b",
+            "#000000",
+            "#000000",
+            "#000000"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 880,
+        "y": 310,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d9a423e5ca136b94",
+        "type": "ui_chart",
+        "z": "57b3492b059d8ed0",
+        "name": "co2 values",
+        "group": "6f32d1e9a4b82503",
+        "order": 1,
+        "width": 8,
+        "height": 6,
+        "label": "CO2 MONITOR",
+        "chartType": "line",
+        "legend": "true",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "No data",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": "1",
+        "removeOlderPoints": "",
+        "removeOlderUnit": "86400",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#7c3aed",
+            "#0284c7",
+            "#10b981",
+            "#ef4444",
+            "#d97706",
+            "#8c564b",
+            "#000000",
+            "#000000",
+            "#000000"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 880,
+        "y": 350,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "929910ec68addeb3",
+        "type": "function",
+        "z": "57b3492b059d8ed0",
+        "name": "To Sensors",
+        "func": "let p = msg.payload || {};\nlet ts = p.timestamp || null;\n\nfunction readGauge(obj, primary, fallback, digits) {\n    let raw = (obj[primary] !== undefined && obj[primary] !== null && obj[primary] !== \"\")\n        ? obj[primary]\n        : obj[fallback];\n    if (raw === undefined || raw === null || raw === \"\") {\n        return null;\n    }\n    let val = Number(raw);\n    return Number.isFinite(val) ? { payload: Number(val.toFixed(digits)), timestamp: ts } : null;\n}\n\nlet mTemp  = readGauge(p, \"temperature_celsius\", \"temp_c\", 2);\nlet mHumid = readGauge(p, \"humidity_percentage\", \"humidity_pct\", 2);\nlet mCo2   = readGauge(p, \"CO2_ppm\", \"co2_ppm\", 1);\nlet mLux   = readGauge(p, \"lux_lumen\", \"lux_lm\", 0);\n\nreturn [mTemp, mHumid, mCo2, mLux];",
+        "outputs": 4,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 570,
+        "y": 430,
+        "wires": [
+            [
+                "549cdc7a88944f2c"
+            ],
+            [
+                "b4e291c3a8014f72"
+            ],
+            [
+                "c8f312d4b9025a83"
+            ],
+            [
+                "7281b96780cd946c"
+            ]
+        ]
+    },
+    {
+        "id": "549cdc7a88944f2c",
+        "type": "ui_gauge",
+        "z": "57b3492b059d8ed0",
+        "name": "🌡 Temperature",
+        "group": "48630916cd4b76b1",
+        "order": 1,
+        "width": 6,
+        "height": 3,
+        "gtype": "gage",
+        "title": "🌡 Temperature",
+        "label": "°C",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "50",
+        "colors": [
+            "#10b981",
+            "#f59e0b",
+            "#ef4444"
+        ],
+        "seg1": "34",
+        "seg2": "39",
+        "diff": false,
+        "className": "",
+        "x": 890,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "b4e291c3a8014f72",
+        "type": "ui_gauge",
+        "z": "57b3492b059d8ed0",
+        "name": "💧 Humidity",
+        "group": "48630916cd4b76b1",
+        "order": 2,
+        "width": 6,
+        "height": 3,
+        "gtype": "gage",
+        "title": "💧 Humidity",
+        "label": "%",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#0ea5e9",
+            "#10b981",
+            "#f59e0b"
+        ],
+        "seg1": "38",
+        "seg2": "86",
+        "diff": false,
+        "className": "",
+        "x": 880,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "c8f312d4b9025a83",
+        "type": "ui_gauge",
+        "z": "57b3492b059d8ed0",
+        "name": "🌫 CO₂",
+        "group": "48630916cd4b76b1",
+        "order": 3,
+        "width": 6,
+        "height": 3,
+        "gtype": "gage",
+        "title": "🌫 CO₂",
+        "label": "ppm",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "2000",
+        "colors": [
+            "#10b981",
+            "#f59e0b",
+            "#ef4444"
+        ],
+        "seg1": "1200",
+        "seg2": "1500",
+        "diff": false,
+        "className": "",
+        "x": 870,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "7281b96780cd946c",
+        "type": "ui_gauge",
+        "z": "57b3492b059d8ed0",
+        "name": "☀ Light (LUX)",
+        "group": "48630916cd4b76b1",
+        "order": 4,
+        "width": 6,
+        "height": 3,
+        "gtype": "gage",
+        "title": "☀ Light (LUX)",
+        "label": "lm",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "60000",
+        "colors": [
+            "#22c55e",
+            "#f59e0b",
+            "#ef4444"
+        ],
+        "seg1": "45000",
+        "seg2": "55000",
+        "diff": false,
+        "className": "",
+        "x": 880,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "b2a397b7bd7e0fec",
+        "type": "ui_button",
+        "z": "57b3492b059d8ed0",
+        "name": "RESET BUTTON",
+        "group": "9c41a2b0e5d73812",
+        "order": 6,
+        "width": 12,
+        "height": 1,
+        "passthru": false,
+        "label": "↻ RESET DASHBOARD",
+        "tooltip": "Clear charts, gauges, LEDs, and AI prediction",
+        "color": "#ffffff",
+        "bgcolor": "#ef4444",
+        "className": "gh-reset-btn",
+        "icon": "",
+        "payload": "[]",
+        "payloadType": "json",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 200,
+        "y": 580,
+        "wires": [
+            [
+                "cabf7d93e22f5251"
+            ]
+        ]
+    },
+    {
+        "id": "cabf7d93e22f5251",
+        "type": "function",
+        "z": "57b3492b059d8ed0",
+        "name": "Clear dashboard (charts + LEDs + text + gauges)",
+        "func": "let isEmptyObject =\n    typeof msg.payload === \"object\" &&\n    msg.payload !== null &&\n    !Array.isArray(msg.payload) &&\n    Object.keys(msg.payload).length === 0;\n\nlet isEmptyArray =\n    Array.isArray(msg.payload) &&\n    msg.payload.length === 0;\n\nif (isEmptyObject || isEmptyArray) {\n    let chartClear = { payload: [] };\n    let normalOff  = { payload: false };\n    let alertOff   = { payload: false };\n    let alarmOff   = { payload: false };\n    let textClear  = { payload: \"\" };\n    let gaugeClear = { payload: 0 };\n\n    return [chartClear, normalOff, alertOff, alarmOff, textClear, gaugeClear];\n}\nreturn null;",
+        "outputs": 6,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 490,
+        "y": 580,
+        "wires": [
+            [
+                "a216e405fdf48f08",
+                "c29c7c568bac1dce",
+                "d9a423e5ca136b94"
+            ],
+            [
+                "ddabb2845b1b0b80"
+            ],
+            [
+                "13c0615d3f04bd62"
+            ],
+            [
+                "a7c4e91f8b2d5031"
+            ],
+            [
+                "0e49455abc61d201",
+                "f1a2b3c4d5e67890"
+            ],
+            [
+                "549cdc7a88944f2c",
+                "b4e291c3a8014f72",
+                "c8f312d4b9025a83",
+                "7281b96780cd946c"
+            ]
+        ]
+    },
+    {
+        "id": "7a9fb4c815f6384d",
+        "type": "ui_template",
+        "z": "57b3492b059d8ed0",
+        "group": "",
+        "name": "Botanical Smart Greenhouse Theme",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "format": "<style>\n/* ==========================================================\n   BOTANICAL SMART GREENHOUSE DASHBOARD THEME (G3B)\n========================================================== */\nbody.nr-dashboard-theme {\n    background: linear-gradient(135deg, #edf7f1 0%, #f3f8fc 50%, #ebf5ef 100%) !important;\n    font-family: \"Segoe UI\", \"Prompt\", \"Noto Sans Thai\", system-ui, -apple-system, sans-serif !important;\n    color: #0f172a !important;\n    font-variant-numeric: tabular-nums;\n}\n\nbody.nr-dashboard-theme md-content,\nbody.nr-dashboard-theme #nr-dashboard-content {\n    background: transparent !important;\n}\n\n/* ===== TOP TOOLBAR ===== */\nbody.nr-dashboard-theme md-toolbar {\n    background: linear-gradient(90deg, #0f5132 0%, #15803d 55%, #0d9488 100%) !important;\n    color: #ffffff !important;\n    box-shadow: 0 4px 18px rgba(15, 81, 50, 0.22) !important;\n}\n\nbody.nr-dashboard-theme md-toolbar h1,\nbody.nr-dashboard-theme md-toolbar .md-toolbar-tools {\n    color: #ffffff !important;\n    font-weight: 700 !important;\n    letter-spacing: 0.4px;\n}\n\n/* ===== GROUP CARDS ===== */\n.nr-dashboard-cardcontainer {\n    background: transparent !important;\n    padding: 8px 6px !important;\n}\n\n.nr-dashboard-cardpanel {\n    background: #ffffff !important;\n    border-radius: 18px !important;\n    border: 1px solid #d1e7dd !important;\n    box-shadow: 0 6px 22px rgba(15, 81, 50, 0.08) !important;\n    padding: 6px 10px 10px 10px !important;\n    overflow: hidden;\n    transition: box-shadow 0.25s ease, transform 0.25s ease;\n}\n\n.nr-dashboard-cardpanel:hover {\n    box-shadow: 0 10px 28px rgba(15, 81, 50, 0.13) !important;\n}\n\n.nr-dashboard-cardpanel > p {\n    color: #0f5132 !important;\n    font-weight: 700 !important;\n    font-size: 15px !important;\n    letter-spacing: 0.3px;\n    padding: 8px 6px 8px 6px !important;\n    margin: 0 4px 8px 4px !important;\n    border-bottom: 1px solid #e6f2eb !important;\n}\n\n/* ===== GAUGES ===== */\n.nr-dashboard-gauge {\n    background: #ffffff !important;\n    border-radius: 14px !important;\n}\n\n.nr-dashboard-gauge text {\n    fill: #1e293b !important;\n    font-family: \"Segoe UI\", \"Prompt\", system-ui, sans-serif !important;\n}\n\n/* ===== AI PREDICTED STATE CARD ===== */\n.gh-predicted-card {\n    background: #f8fafc !important;\n    border: 1px solid #e2e8f0 !important;\n    border-radius: 14px !important;\n    padding: 0 16px !important;\n    box-sizing: border-box;\n}\n\n.gh-predicted-card .label {\n    color: #334155 !important;\n    font-weight: 700 !important;\n    font-size: 15px !important;\n}\n\n.gh-state-pill {\n    display: inline-flex;\n    align-items: center;\n    justify-content: center;\n    padding: 7px 20px;\n    border-radius: 999px;\n    font-weight: 800;\n    font-size: 16px;\n    letter-spacing: 1px;\n    min-width: 116px;\n    text-align: center;\n    transition: all 0.25s ease;\n}\n\n.gh-state-normal {\n    background: #dcfce7;\n    color: #166534;\n    border: 1.5px solid #22c55e;\n    box-shadow: 0 2px 10px rgba(34, 197, 94, 0.22);\n}\n\n.gh-state-alert {\n    background: #fef3c7;\n    color: #92400e;\n    border: 1.5px solid #f59e0b;\n    box-shadow: 0 2px 10px rgba(245, 158, 11, 0.25);\n}\n\n.gh-state-alarm {\n    background: #fee2e2;\n    color: #991b1b;\n    border: 1.5px solid #ef4444;\n    animation: gh-alarm-pulse 1.4s infinite ease-in-out;\n}\n\n.gh-state-idle {\n    background: #f1f5f9;\n    color: #475569;\n    border: 1.5px solid #cbd5e1;\n}\n\n@keyframes gh-alarm-pulse {\n    0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.42); }\n    50% { box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }\n}\n\n/* ===== AI CONFIDENCE & TIMESTAMP WIDGET ===== */\n.gh-confidence-card {\n    background: #f8fafc !important;\n    border: 1px solid #e2e8f0 !important;\n    border-radius: 14px !important;\n    padding: 8px 14px !important;\n    overflow: hidden !important;\n    box-sizing: border-box;\n}\n\n.gh-conf-wrap {\n    width: 100%;\n    height: 100%;\n    display: flex;\n    flex-direction: column;\n    justify-content: center;\n    gap: 5px;\n}\n\n.gh-conf-head {\n    display: flex;\n    align-items: center;\n    justify-content: space-between;\n    margin-bottom: 2px;\n}\n\n.gh-conf-title {\n    font-size: 11px;\n    font-weight: 700;\n    letter-spacing: 0.6px;\n    color: #64748b;\n}\n\n.gh-ts-badge {\n    font-size: 11px;\n    font-weight: 600;\n    color: #0f5132;\n    background: #dcfce7;\n    border: 1px solid #bbf7d0;\n    padding: 1px 8px;\n    border-radius: 999px;\n    font-family: \"Consolas\", \"Courier New\", monospace;\n}\n\n.gh-bars {\n    display: flex;\n    flex-direction: column;\n    gap: 4px;\n}\n\n.gh-bar-row {\n    display: flex;\n    align-items: center;\n    gap: 8px;\n    font-size: 12px;\n}\n\n.gh-bar-lbl {\n    width: 48px;\n    font-weight: 600;\n    color: #334155;\n    flex-shrink: 0;\n}\n\n.gh-bar-track {\n    flex: 1;\n    height: 8px;\n    background: #e2e8f0;\n    border-radius: 999px;\n    overflow: hidden;\n}\n\n.gh-bar-fill {\n    height: 100%;\n    border-radius: 999px;\n    transition: width 0.35s ease;\n}\n\n.gh-fill-normal { background: linear-gradient(90deg, #22c55e, #10b981); }\n.gh-fill-alert  { background: linear-gradient(90deg, #fbbf24, #f59e0b); }\n.gh-fill-alarm  { background: linear-gradient(90deg, #f87171, #ef4444); }\n\n.gh-bar-pct {\n    width: 46px;\n    text-align: right;\n    font-weight: 700;\n    color: #1e293b;\n    flex-shrink: 0;\n}\n\n/* ===== LED PILL ROWS ===== */\n.nr-dashboard-template:not(.gh-confidence-card) {\n    background: transparent !important;\n}\n\n.nr-dashboard-template:not(.gh-confidence-card) .control {\n    background: #f8fafc !important;\n    border: 1px solid #e2e8f0 !important;\n    border-radius: 12px !important;\n    padding: 0 12px !important;\n    box-sizing: border-box;\n}\n\n.nr-dashboard-template:not(.gh-confidence-card) .control > span.name {\n    color: #1e293b !important;\n    font-weight: 700 !important;\n    font-size: 14px !important;\n}\n\n/* ===== RESET BUTTON ===== */\n.gh-reset-btn button {\n    border-radius: 12px !important;\n    background: linear-gradient(135deg, #ef4444, #dc2626) !important;\n    color: #ffffff !important;\n    font-weight: 700 !important;\n    font-size: 13px !important;\n    letter-spacing: 0.6px !important;\n    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.24) !important;\n    transition: transform 0.15s ease, box-shadow 0.2s ease !important;\n}\n\n.gh-reset-btn button:hover {\n    transform: translateY(-1px);\n    box-shadow: 0 6px 16px rgba(220, 38, 38, 0.34) !important;\n}\n\n/* ===== CHARTS ===== */\n.nr-dashboard-chart {\n    background: #ffffff !important;\n    border-radius: 12px !important;\n    padding: 4px 6px !important;\n}\n\n.nr-dashboard-chart-title {\n    color: #0f172a !important;\n    font-weight: 700 !important;\n    font-size: 13px !important;\n    letter-spacing: 0.4px;\n}\n</style>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": false,
+        "templateScope": "global",
+        "className": "",
+        "x": 250,
+        "y": 670,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7b749cbd3b1d96e1",
+        "type": "mqtt-broker",
+        "name": "Greenhouse MQTT (192.168.1.1)",
+        "broker": "192.168.1.1",
+        "port": 1883,
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "48630916cd4b76b1",
+        "type": "ui_group",
+        "z": "57b3492b059d8ed0",
+        "name": "Sensor Readings",
+        "tab": "ui_tab_plant",
+        "order": 1,
+        "disp": true,
+        "width": 12,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "9c41a2b0e5d73812",
+        "type": "ui_group",
+        "z": "57b3492b059d8ed0",
+        "name": "AI Status & Control",
+        "tab": "ui_tab_plant",
+        "order": 2,
+        "disp": true,
+        "width": 12,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "8b30f1a9d4c62701",
+        "type": "ui_group",
+        "z": "57b3492b059d8ed0",
+        "name": "Temp & Humidity",
+        "tab": "ui_tab_plant",
+        "order": 3,
+        "disp": true,
+        "width": 8,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "5e21c0d8f3a71492",
+        "type": "ui_group",
+        "z": "57b3492b059d8ed0",
+        "name": "Light Intensity",
+        "tab": "ui_tab_plant",
+        "order": 4,
+        "disp": true,
+        "width": 8,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "6f32d1e9a4b82503",
+        "type": "ui_group",
+        "z": "57b3492b059d8ed0",
+        "name": "CO₂ Concentration",
+        "tab": "ui_tab_plant",
+        "order": 5,
+        "disp": true,
+        "width": 8,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "ui_tab_plant",
+        "type": "ui_tab",
+        "name": "Dashboard",
+        "icon": "dashboard",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "fd7ef34112ccb88c",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "node-red-dashboard": "3.6.5",
+            "node-red-contrib-ui-led": "0.4.11"
+        }
+    }
+]

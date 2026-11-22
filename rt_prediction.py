@@ -13,7 +13,7 @@ import case_config as cfg
 MQTT_CONFIG = {
     "BROKER_HOST": "192.168.1.1",
     "BROKER_PORT": 1883,
-    "TOPIC_IN": "idt/pt/grh/usdts",#แก้
+    "TOPIC_IN": "idt/cpt/grh/ucdts-publish",#แก้
     "TOPIC_OUT": "idt/cd-alp/G3B",
     "CLIENT_ID": "G3B",
     "QOS": 1,

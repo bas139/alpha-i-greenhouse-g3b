@@ -1,0 +1,21 @@
+# Python virtual environment & caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS & editor files
+.DS_Store
+Thumbs.db
+desktop.ini
+*.tmp
+*.bak
+*.zip
+
+# Local secrets (if ever added)
+.env
+.env.*

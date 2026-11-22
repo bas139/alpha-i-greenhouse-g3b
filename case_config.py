@@ -5,8 +5,8 @@ CASE_ID = "c.grh"
 CASE_TITLE = "Greenhouse Environment State"
 
 MODEL_NAME = "decision_tree"
-FEATURES = ["temp_c", "humidity_pct", "lux_lm", "co2_ppm"]
-CLASS_LABELS = ["normal", "alert", "alarm"] #แก้
+FEATURES = ["temperature_celsius", "humidity_percentage", "lux_lumen", "CO2_ppm"]
+CLASS_LABELS = ["Normal_state", "Alert_state", "Alarm_state"] #แก้
 
 # ============================================================
 # UTILITY

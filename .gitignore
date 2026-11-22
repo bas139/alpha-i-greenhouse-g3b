@@ -19,3 +19,6 @@ desktop.ini
 # Local secrets (if ever added)
 .env
 .env.*
+
+# Organizer grading harness (do not publish)
+_score_p1/
